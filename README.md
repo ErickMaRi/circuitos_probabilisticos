@@ -1,3 +1,7 @@
+# Readme depreciado, nuevos TODO:
+
+Hasta ahora el código produce los datos asociados a la simulación de los circuitos perturbados, es necesario hacer los módulos que correlacionan el valor de elementos de circuito con distintas funciones de recompensa que el usuario debe poder ingresar (es necesario ambas las implementaciones de UI y backend). Luego de esto hay que hacer el loop que optimiza el circuito recorriendo con los valores de elemento en la dirección correlacionada con la recompensa máxima. 
+
 # Simulación de Circuitos con Perturbaciones - Documentación del Proyecto
 
 El proyecto de simulación de circuitos con perturbaciones es una herramienta diseñada para realizar análisis de sensibilidad en circuitos electrónicos. El objetivo principal es evaluar el impacto de pequeñas variaciones en los valores de los componentes del circuito y estudiar cómo afectan el rendimiento y el comportamiento del sistema.
@@ -141,7 +145,6 @@ El software se basará en una arquitectura modular que permita la escalabilidad 
 Si tienes alguna pregunta o sugerencia relacionada con este proyecto, no dudes en ponerte en contacto con los desarrolladores:
 
 - Nombre del desarrollador 1: [Erick Marín Rojas](mailto:erick.marinrojas@ucr.ac.cr)
-- Nombre del desarrollador 2: [Jose Pablo Eras Saborío](mailto:jose.eras@ucr.ac.cr)
 
 ## Requerimientos a instalar
 
