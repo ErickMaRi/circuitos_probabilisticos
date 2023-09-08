@@ -1,0 +1,389 @@
+********************************************
+**  TINA device library                   **
+**  (c) 2008 DesignSoft, Inc.             **
+********************************************
+*
+.SUBCKT PotMeter A B C PARAMS: Res=1, Percent=1
+R1 A C {Res * Percent}
+R2 B C {Res * (1-Percent)}
+.ENDS
+
+*
+* TTL/CMOS power supply
+*
+.subckt DIGIFPWR  AGND
++	optional: DPWR=$G_DPWR DGND=$G_DGND
++	params:   VOLTAGE=5.0v REFERENCE=0v
+*
+VDPWR  DPWR DGND  {VOLTAGE}
+R1     DPWR AGND  1MEG
+VDGND  DGND AGND  {REFERENCE}
+R2     DGND AGND  1MEG
+.ends
+
+*
+* CD4000 CMOS power supply
+*
+.param CD4000_VDD 5.0V
+.param CD4000_VSS 0.0V
+
+.subckt CD4000_PWR  AGND
++	optional: VDD=$G_CD4000_VDD VSS=$G_CD4000_VSS
++	params:   VOLTAGE={CD4000_VDD} REFERENCE={CD4000_VSS}
+*
+VVDD  VDD VSS   {VOLTAGE}
+R1    VDD AGND  1MEG
+VVSS  VSS AGND  {REFERENCE}
+R2    VSS AGND  1MEG
+.ends
+*$
+
+.MODEL Locgate UGATE (TPLHTY=0 TPHLTY=0)
+
+; ****************** MasterSlave JK & RS flipflops *****************
+
+.SUBCKT JKFF_MS_STD P C CP J K Q QN OPTIONAL: GND=$G_DGND
++       PARAMS: DLH = 0 DHL = 0
+U_2 JKFF(1) $G_DPWR GND P C CP DJ DK Q QN Local IO_STD
+U_3 DFF(2) $G_DPWR GND $G_DPWR $G_DPWR CP J K DJ DK DJN DKN UEFF IO_STD
+.MODEL Local UEFF ( TPPCQLHTY = {DLH} TPCLKQLHTY = {DLH}
++                   TPPCQHLTY = {DHL} TPCLKQHLTY = {DHL} )
+.ENDS
+
+.SUBCKT JKFF_MS_STD_OC P C CP J K Q QN OPTIONAL: GND=$G_DGND
++       PARAMS: DLH = 0 DHL = 0
+U_2 JKFF(1) $G_DPWR GND P C CP DJ DK Q QN Local IO_STD_OC
+U_3 DFF(2) $G_DPWR GND $G_DPWR $G_DPWR CP J K DJ DK DJN DKN UEFF IO_STD_OC
+.MODEL Local UEFF ( TPPCQLHTY = {DLH} TPCLKQLHTY = {DLH}
++                   TPPCQHLTY = {DHL} TPCLKQHLTY = {DHL} )
+.ENDS
+
+.SUBCKT JKFF_MS_LS P C CP J K Q QN OPTIONAL: GND=$G_DGND
++       PARAMS: DLH = 0 DHL = 0
+U_2 JKFF(1) $G_DPWR GND P C CP DJ DK Q QN Local IO_LS
+U_3 DFF(2) $G_DPWR GND $G_DPWR $G_DPWR CP J K DJ DK DJN DKN UEFF IO_LS
+.MODEL Local UEFF ( TPPCQLHTY = {DLH} TPCLKQLHTY = {DLH}
++                   TPPCQHLTY = {DHL} TPCLKQHLTY = {DHL} )
+.ENDS
+
+.SUBCKT JKFF_MS_LS_OC P C CP J K Q QN OPTIONAL: GND=$G_DGND
++       PARAMS: DLH = 0 DHL = 0
+U_2 JKFF(1) $G_DPWR GND P C CP DJ DK Q QN Local IO_LS_OC
+U_3 DFF(2) $G_DPWR GND $G_DPWR $G_DPWR CP J K DJ DK DJN DKN UEFF IO_LS_OC
+.MODEL Local UEFF ( TPPCQLHTY = {DLH} TPCLKQLHTY = {DLH}
++                   TPPCQHLTY = {DHL} TPCLKQHLTY = {DHL} )
+.ENDS
+
+; ******************* Masterslave D flipflops *********************
+
+.SUBCKT DFF_MS_STD P C CP D Q QN OPTIONAL: GND=$G_DGND
++       PARAMS: DLH = 0 DHL = 0
+U_2 JKFF(1) $G_DPWR GND P C CP DD DDN Q QN Local IO_STD
+U_3 DFF(1) $G_DPWR GND $G_DPWR $G_DPWR CP D DD DDN UEFF IO_STD
+.MODEL Local UEFF ( TPPCQLHTY = {DLH} TPCLKQLHTY = {DLH}
++                   TPPCQHLTY = {DHL} TPCLKQHLTY = {DHL} )
+.ENDS
+
+.SUBCKT DFF_MS_STD_OC P C CP D Q QN OPTIONAL: GND=$G_DGND
++       PARAMS: DLH = 0 DHL = 0
+U_2 JKFF(1) $G_DPWR GND P C CP DD DDN Q QN Local IO_STD_OC
+U_3 DFF(1) $G_DPWR GND $G_DPWR $G_DPWR CP D DD DDN UEFF IO_STD_OC
+.MODEL Local UEFF ( TPPCQLHTY = {DLH} TPCLKQLHTY = {DLH}
++                   TPPCQHLTY = {DHL} TPCLKQHLTY = {DHL} )
+.ENDS
+
+.SUBCKT DFF_MS_LS P C CP D Q QN OPTIONAL: GND=$G_DGND
++       PARAMS: DLH = 0 DHL = 0
+U_2 JKFF(1) $G_DPWR GND P C CP DD DDN Q QN Local IO_LS
+U_3  DFF(1) $G_DPWR GND $G_DPWR $G_DPWR CP D DD DDN UEFF IO_LS
+.MODEL Local UEFF ( TPPCQLHTY = {DLH} TPCLKQLHTY = {DLH}
++                   TPPCQHLTY = {DHL} TPCLKQHLTY = {DHL} )
+.MODEL Locgate UGATE (TPLHTY=0 TPHLTY=0)
+.ENDS
+
+.SUBCKT DFF_MS_LS_OC P C CP D Q QN OPTIONAL: GND=$G_DGND
++       PARAMS: DLH = 0 DHL = 0
+U_2 JKFF(1) $G_DPWR GND P C CP DD DDN Q QN Local IO_LS_OC
+U_3  DFF(1) $G_DPWR GND $G_DPWR $G_DPWR CP D DD DDN UEFF IO_LS_OC
+.MODEL Local UEFF ( TPPCQLHTY = {DLH} TPCLKQLHTY = {DLH}
++                   TPPCQHLTY = {DHL} TPCLKQHLTY = {DHL} )
+.MODEL Locgate UGATE (TPLHTY=0 TPHLTY=0)
+.ENDS
+
+* UA741 operational amplifier "macromodel" subcircuit
+* created using Parts release 4.01 on 07/05/89 at 09:09
+* (REV N/A)
+* connections:   non-inverting input
+*                | inverting input
+*                | | positive power supply
+*                | | | negative power supply
+*                | | | | output
+*                | | | | |
+.subckt UA741    1 2 3 4 5
+*
+  c1   11 12 4.664E-12
+  c2    6  7 20.00E-12
+  dc    5 53 dx
+  de   54  5 dx
+  dlp  90 91 dx
+  dln  92 90 dx
+  dp    4  3 dx
+  egnd 99  0 poly(2) (3,0) (4,0) 0 .5 .5
+  fb    7 99 poly(5) vb vc ve vlp vln 0 10.61E6 -10E6 10E6 10E6 -10E6
+  ga	6  0 11 12 137.7E-6
+  gcm	0  6 10 99 2.574E-9
+  iee  10  4 dc 10.16E-6
+  hlim 90  0 vlim 1K
+  q1   11  2 13 qx
+  q2   12  1 14 qx
+  r2    6  9 100.0E3
+  rc1   3 11 7.957E3
+  rc2   3 12 7.957E3
+  re1  13 10 2.740E3
+  re2  14 10 2.740E3
+  ree  10 99 19.69E6
+  ro1   8  5 150
+  ro2   7 99 150
+  rp    3  4 18.11E3
+  vb    9  0 dc 0
+  vc	3 53 dc 2.600
+  ve   54  4 dc 2.600
+  vlim  7  8 dc 0
+  vlp  91  0 dc 25
+  vln   0 92 dc 25
+.model dx D(Is=800.0E-18)
+.model qx NPN(Is=800.0E-18 Bf=62.50)
+.ends
+
+* STANDARD OPERATIONAL AMPLIFIER MACROMODEL SUBCIRCUIT
+* CREATED USING 08/05/06
+* (REV 1.3 26/02/08 )
+.SUBCKT STDOPAMP  INP INM VP VM OUT
++ PARAMS: GAIN=200K RIN=2MEG RINC=1E9 ROUT=75 SLEWRATE=500K FPOLE1=5 FPOLE2=1MEG 
++         VDROPOH=1.9 VDROPOL=1.9 VOFFS=1M IBIAS=80N IOFFS=20N 
+*
+.PARAM PI = 3.141592
+.PARAM IS = 1.0E-12
+.PARAM VT = 0.02585
+.PARAM IMAX = 100.0E-2
+.PARAM C1 = {IMAX/SLEWRATE}
+.PARAM R1 = {1/(2*PI*C1*FPOLE1)}
+.PARAM GM1 = {GAIN/R1}
+.PARAM R2 = 100
+.PARAM G2 = {1/R2}
+.PARAM GOUT = {1/ROUT}
+.PARAM C2 = {1/(2*PI*R2*FPOLE2)}
+.PARAM VDF = {VT*LOG(1 + IMAX/IS)}
+*
+IBIASM      INM 0  {IBIAS - IOFFS}
+RINM      INM  8  {2*RINC}
+RINP      INP  8  {2*RINC}
+IBIAS       10 0   {IBIAS}
+VOFFS       10 INP  {VOFFS}
+EVP VPI 0 VP 0 1
+EVM VMI 0 VM 0 1
+VC          VPI 11  {VDROPOH + VDF}
+VE          12 VMI  {VDROPOL + VDF}
+D1          VM VP  D_1
+RP          VP VM  15E3
+ROUT        OUT 8  {ROUT}
+GMO         8 OUT 9 8 {GOUT}
+C2          9 8  {C2}
+R2          9 8  {R2}
+GM2         8 9 7 8 {G2}
+RIN         INM 10  {RIN}
+EGND        8  0  POLY(2) (VP,0) (VM,0) 0 .5 .5
+D3         12 7  D_1
+D2          7 11  D_1
+C1          7 8  {C1}
+R1          7 8  {R1}
+GM1         8 7 VALUE = { LIMIT( GM1*V(10,INM), -IMAX, IMAX) }
+.MODEL D_1 D( IS={IS} )
+.ENDS
+
+* Standard operational amplifier macromodel subcircuit
+* Created using 08/05/06
+* (REV 1.2 10/12/07 )
+.SUBCKT StdOpamp12 INP INM VP VM Out
++ Params: GAIN=200K RIN=2MEG RINC=1E9 ROUT=75 SLEWRATE=500K FPOLE1=5 FPOLE2=1MEG 
++         VDROPOH=1.9 VDROPOL=1.9 VOFFS=1m IBIAS=80n IOFFS=20n 
+*
+.PARAM VOSW = 15
+.PARAM pi = 3.141592
+.PARAM IS = 8.0E-16
+.PARAM VT = 0.02585
+.PARAM C1 = {VOSW/ROUT/SLEWRATE}
+.PARAM IMAX = {C1*SLEWRATE}
+.PARAM R1 = {1/(2*pi*C1*FPOLE1)}
+.PARAM GM1 = {GAIN/R1}
+.PARAM R2 = 100
+.PARAM G2 = {1/R2}
+.PARAM GOUT = {1/ROUT}
+.PARAM C2 = {1/(2*pi*R2*FPOLE2)}
+.PARAM VDF = {VT*Log(1 + IMAX/IS)}
+*
+Ibiasm      INM 0  {IBIAS - IOFFS}
+RINM      INM  8  {2*RINC}
+RINP      INP  8  {2*RINC}
+Ibias       10 0   {IBIAS}
+Voffs       10 INP  {VOFFS}
+EVP VPI 0 VP 0 1
+EVM VMI 0 VM 0 1
+Vc          VPI 11  {VDROPOH + VDF}
+Ve          12 VMI  {VDROPOL + VDF}
+D1          VM VP  D_1
+Rp          VP VM  15E3
+ROut        OUT 8  {ROUT}
+GmO         8 OUT Value =  {V(9,8)*GOUT}
+C2          9 8  {C2}
+R2          9 8  {R2}
+Gm2         8 9  Value =  {V(7,8)*G2}
+Rin         INM 10  {RIN}
+EGND        8  0  POLY(2) (VP,0) (VM,0) 0 .5 .5
+D3         12 7  D_1
+D2          7 11  D_1
+C1          7 8  {C1}
+R1          7 8  {R1}
+Gm1         8 7 Value = { Limit( GM1*V(10,INM), -IMAX, IMAX) }
+.MODEL D_1 D( IS={IS} RS=10m )
+.ENDS
+
+* Standard operational amplifier macromodel subcircuit
+* Created using 08/05/06
+* (REV 1.1 29/07/06 )
+.SUBCKT StdOpamp11 INP INM VP VM Out
++ Params: GAIN=200K RIN=2MEG RINC=1E9 ROUT=75 SLEWRATE=500K FPOLE1=5 FPOLE2=1MEG 
++         VDROPOH=1.9 VDROPOL=1.9 VOFFS=1m IBIAS=80n IOFFS=20n 
+*
+.PARAM VOSW = 15
+.PARAM pi = 3.141592
+.PARAM IS = 1.0E-12
+.PARAM VT = 0.02585
+.PARAM C1 = {VOSW/ROUT/SLEWRATE}
+.PARAM IMAX = {C1*SLEWRATE}
+.PARAM R1 = {1/(2*pi*C1*FPOLE1)}
+.PARAM GM1 = {GAIN/R1}
+.PARAM R2 = 100
+.PARAM G2 = {1/R2}
+.PARAM GOUT = {1/ROUT}
+.PARAM C2 = {1/(2*pi*R2*FPOLE2)}
+.PARAM VDF = {VT*Log(1 + IMAX/IS)}
+*
+Ibiasm      INM 0  {IBIAS - IOFFS}
+RINM      INM  8  {2*RINC}
+RINP      INP  8  {2*RINC}
+Ibias       10 0   {IBIAS}
+Voffs       10 INP  {VOFFS}
+Vc          VP 11  {VDROPOH + VDF}
+Ve          12 VM  {VDROPOL + VDF}
+D1          VM VP  D_1
+Rp          VP VM  15E3
+ROut        OUT 8  {ROUT}
+GmO         8 OUT Value =  {V(9,8)*GOUT}
+C2          9 8  {C2}
+R2          9 8  {R2}
+Gm2         8 9  Value =  {V(7,8)*G2}
+Rin         INM 10  {RIN}
+EGND        8  0  POLY(2) (VP,0) (VM,0) 0 .5 .5
+D3          12 7  D_1
+D2          7 11  D_1
+C1          7 8  {C1}
+R1          7 8  {R1}
+Gm1         8 7 Value = { Limit( GM1*V(10,INM), -IMAX, IMAX) }
+.MODEL D_1 D( IS={IS} RS=10m )
+.ENDS
+
+* Standard operational amplifier macromodel subcircuit
+* Created using 08/05/06
+* (REV 1.0)
+.SUBCKT StdOpamp10 In+ In- V+ V- Out
++ Params: GAIN=200K RIN=2MEG ROUT=75 SLEWRATE=500K FPOLE1=5 FPOLE2=1MEG 
++         VDROPOH=1.9 VDROPOL=1.9 VOFFS=1m IBIAS=80n IOFFS=20n 
+*
+.PARAM VOSW = 15
+.PARAM pi = 3.141592
+.PARAM IS = 1.0E-12
+.PARAM VT = 0.02585
+.PARAM C1 = {VOSW/ROUT/SLEWRATE}
+.PARAM IMAX = {C1*SLEWRATE}
+.PARAM R1 = {1/(2*pi*C1*FPOLE1)}
+.PARAM GM1 = {GAIN/R1}
+.PARAM R2 = 100
+.PARAM G2 = {1/R2}
+.PARAM GOUT = {1/ROUT}
+.PARAM C2 = {1/(2*pi*R2*FPOLE2)}
+.PARAM VDF = {VT*Log(1 + IMAX/IS)}
+*
+Ibiasm      In- 0  {IBIAS - IOFFS}
+RIn-      In-  8  {10*RIN}
+RIn+      In+  8  {10*RIN}
+Ibias       10 0   {IBIAS}
+Voffs       10 In+  {VOFFS}
+Vc          V+ 11  {VDROPOH + VDF}
+Ve          12 V-  {VDROPOL + VDF}
+D1          V- V+  D_1
+Rp          V+ V-  15E3
+ROut        OUT 8  {ROUT}
+GmO         8 OUT Value =  {V(9,8)*GOUT}
+C2          9 8  {C2}
+R2          9 8  {R2}
+Gm2         8 9  Value =  {V(7,8)*G2}
+Rin         In- 10  {RIN}
+EGND        8  0  POLY(2) (V+,0) (V-,0) 0 .5 .5
+D3          12 7  D_1
+D2          7 11  D_1
+C1          7 8  {C1}
+R1          7 8  {R1}
+Gm1         8 7 Value = { Limit( GM1*V(10,In-), -IMAX, IMAX) }
+.MODEL D_1 D( IS={IS} )
+.ENDS
+
+* Linear operational amplifier macromodel subcircuit
+* Created using 11/05/06 
+* (REV 1.0)
+.SUBCKT LinOpamp In+ In- V+ V- Out  
++ Params: GAIN=200K RIN=2MEG ROUT=75 FPOLE1=5 
+*
+Rp          V+ V-  15E3
+ROut        OUT 8  {ROUT}
+GmO         8 OUT In+ In-  {GAIN/ROUT}
+Rin         In- In+  {RIN}
+EGND        8  0  POLY(2) (V+,0) (V-,0) 0 .5 .5
+C1          OUT 8  {1/(2*pi*ROUT*FPOLE1)}
+.ENDS
+
+* Ideal operational amplifier macromodel subcircuit
+* Created using 11/05/06 
+* (REV 1.0)
+.SUBCKT IdOpamp In+ In- Out
++ Params: GAIN=1E12
+*
+EO         OUT 0  In+ In-  {GAIN}
+.ENDS
+
+.SUBCKT SW N+ N- NC+ NC-
++ PARAMS: VT=0 VH=0 RON=1 ROFF=1E12 TDEL=10N
+*
+*VT threshold voltage Volts 0.0 
+*VH hysteresis voltage Volts 0.0 
+*RON on resistance ohm 1.0 
+*ROFF off resistance ohm 1/GMIN* 
+*
+.PARAM VTHH={VT+VH}
+.PARAM VTHL={VT-VH}
+.PARAM RD=1  
+.PARAM CD={TDEL/(0.693*RD)}
+.PARAM RSW={RON*ROFF/(ROFF - RON)}
+.PARAM GSW={1/RSW}
+*
+R2 NC+ 0 1E9
+R3 NC- 0 1E9
+R4 N+ N- {ROFF}
+G1 N+ N- VALUE= { IF ( V(NC+,NC-) > V(CN), V(N+,N-)*{GSW}, 0) }
+E1 1 0 VALUE= { IF ( V(NC+,NC-) > V(CN), {VTHL}, {VTHH}) }
+R1 1 CN {RD}
+C1 CN 0 {CD}
+.ENDS SW
+*
+*End of library file
+
