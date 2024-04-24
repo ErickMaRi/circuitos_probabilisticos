@@ -95,7 +95,7 @@ El software se basará en una arquitectura modular que permita la escalabilidad 
 4. Una vez completadas las simulaciones, los resultados se enviarán automáticamente al servicio mySQL para su almacenamiento.
 5. Utiliza las herramientas de análisis proporcionadas para explorar los resultados estadísticos y las distribuciones probabilísticas generadas.
 
-<<<<<<< HEAD
+
 ## Requerimientos a instalar
 
 - PySpice: "PySpice: a Python module to interface with Ngspice and Xyce, Pierre-Emmanuel Gaillardon, Xavier Jehl, Fabien Soulier, and Philippe Vivet, Journal of Open Source Software, 4(44), 1827, [doi 🔗](10.21105/joss.01827) ." [Sitio oficial 🔗](https://pyspice.fabrice-salvaire.fr/) [Instalación 🔗](https://pyspice.fabrice-salvaire.fr/releases/v1.3/installation.html#:~:text=PySpice%20is%20available%20on%20the%20Python%20Packages%20PyPI,to%20install%20the%20latest%20release%3A%20pip%20install%20PySpice) 
@@ -111,7 +111,7 @@ El software se basará en una arquitectura modular que permita la escalabilidad 
 
 ## Licencia
 
-MIT
+TODO
 
 ## TODO.
 
