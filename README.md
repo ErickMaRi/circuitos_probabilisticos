@@ -142,9 +142,9 @@ El software se basará en una arquitectura modular que permita la escalabilidad 
 
 ## Contacto
 
-Si tienes alguna pregunta o sugerencia relacionada con este proyecto, no dudes en ponerte en contacto con los desarrolladores:
+Si tienes alguna pregunta o sugerencia relacionada con este proyecto, no dudes en ponerte en contacto conmigo:
 
-- Nombre del desarrollador 1: [Erick Marín Rojas](mailto:erick.marinrojas@ucr.ac.cr)
+- Desarrollador: [Erick Marín Rojas](mailto:erick.marinrojas@ucr.ac.cr)
 
 ## Requerimientos a instalar
 
