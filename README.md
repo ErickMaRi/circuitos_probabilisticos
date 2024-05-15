@@ -46,14 +46,6 @@ El proyecto presenta varias dificultades y facilidades que los desarrolladores d
 
 3. **Integración con servicios en la nube**: El envío de los resultados de simulación a un servicio en la nube como Prometheus implica la comprensión de cómo interactuar con la API del servicio y garantizar la seguridad y confidencialidad de los datos enviados.
 
-### Facilidades:
-
-1. **Desarrollo de software**: Si bien los desarrolladores son estudiantes de ingeniería eléctrica, están cursando en un curso de desarrollo de software. Esto proporciona una base sólida en la implementación de software.
-
-2. **Herramientas de simulación**: Existen herramientas de simulación de circuitos disponibles, como NgSpice a través de PySpice, que proporcionan una interfaz de programación para interactuar con el simulador. Esto facilitará la implementación de la funcionalidad de simulación en el software.
-
-3. **Metodología ágil**: La adopción de una metodología ágil permitirá a los desarrolladores iterar rápidamente, adaptarse a los cambios y mantener una comunicación constante con los clientes o profesores que supervisen el proyecto.
-
 ## Diagrama
 ![example image](Dependencia_con_UI.jpg)
 
