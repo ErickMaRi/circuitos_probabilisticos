@@ -135,15 +135,3 @@ Hasta ahora el código produce los datos asociados a la simulación de los circu
 Si tienes alguna pregunta o sugerencia relacionada con este proyecto, no dudes en ponerte en contacto conmigo:
 
 - Desarrollador: [Erick Marín Rojas](mailto:erick.marinrojas@ucr.ac.cr)
-
-## Requerimientos a instalar
-
-- PySpice: "PySpice: a Python module to interface with Ngspice and Xyce, Pierre-Emmanuel Gaillardon, Xavier Jehl, Fabien Soulier, and Philippe Vivet, Journal of Open Source Software, 4(44), 1827, [doi 🔗](10.21105/joss.01827) ." [Sitio oficial 🔗](https://pyspice.fabrice-salvaire.fr/) [Instalación 🔗](https://pyspice.fabrice-salvaire.fr/releases/v1.3/installation.html#:~:text=PySpice%20is%20available%20on%20the%20Python%20Packages%20PyPI,to%20install%20the%20latest%20release%3A%20pip%20install%20PySpice) 
-- Scipy:  "Virtanen, P., Gommers, R., Oliphant, T.E. et al. SciPy 1.0: fundamental algorithms for scientific computing in Python. Nat Meth 17, 261–272 (2020). [doi 🔗](https://doi.org/10.1038/s41592-019-0686-2)." [Sitio oficial 🔗](https://scipy.org/) [Instalación 🔗](https://scipy.org/install/)
-- Ast: "Python Software Foundation. (2023). ast — Abstract Syntax Trees. Python 3.11.4 Documentation. Obtenido el 10 de Julio del 2023, [de 🔗](https://docs.python.org/3/library/ast.html)."
-- OS: "Python Software Foundation. (2017). os — Miscellaneous operating system interfaces. Python 3.11.4 Documentation. Obtenido el 10 de Julio del 2023, [de 🔗](https://docs.python.org/3/library/os.html)."
-- NetworkX : "Hagberg, A., Schult, D., & Swart, P. (2008). Exploring network structure, dynamics, and function using NetworkX. In Proceedings of the 7th Python in Science Conference (pp. 11-15)." [Sitio oficial 🔗](https://networkx.org/) [Instalación 🔗](https://networkx.org/documentation/networkx-1.1/install.html#:~:text=Get%20NetworkX%20from%20the%20Python%20Package%20Index%20at,that%20matches%20your%20operating%20system%20and%20Python%20version.)
-- Matplotlib : "Hunter, J. D. (2007). Matplotlib: A 2D graphics environment. Computing in Science & Engineering, 9(3), 90-95." [Sitio oficial 🔗](https://matplotlib.org/) [Instalación 🔗](https://pypi.org/project/matplotlib/)
-- Regex : "regex. (2023). PyPI. Obtenido el 10 de Julio del 2023, [de 🔗](https://pypi.org/project/regex/)."
-- Numpy : "Harris, C. R., Millman, K. J., van der Walt, S. J., Gommers, R., Virtanen, P., Cournapeau, D., ... & Oliphant, T. E. (2020). Array programming with NumPy. Nature, 585(7825), 357-362." [Sitio oficial 🔗](https://numpy.org/) [Instalación 🔗](https://numpy.org/install/)
-- Seaborn : "Waskom, M., Botvinnik, O., O'Kane, D., Hobson, P., Ostblom, J., Lukauskas, S., ... & Augspurger, T. (2021). mwaskom/seaborn: v0.11.2 (January 2021). Zenodo. Obtenido [de 🔗](https://doi.org/10.5281/zenodo.3892921)." [Sitio oficial 🔗](https://seaborn.pydata.org/) [Instalación 🔗](https://seaborn.pydata.org/installing.html)
