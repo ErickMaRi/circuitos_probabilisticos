@@ -105,6 +105,16 @@ El software se basará en una arquitectura modular que permita la escalabilidad 
 
 TODO
 
+## Advertencia
+
+ * Descargo de responsabilidad:
+ * El siguiente código se proporciona "tal cual" sin garantía de ningún tipo, ya sea expresa o implícita,
+ * incluyendo, pero no limitado a, las garantías implícitas de comerciabilidad y aptitud para un propósito particular.
+ * En ningún caso el autor o los contribuyentes serán responsables de ningún daño directo, indirecto, incidental, especial,
+ * ejemplar o consecuente (incluyendo, pero no limitado a, la adquisición de bienes o servicios sustitutos;
+ * pérdida de uso, datos o beneficios; o interrupción del negocio) que surja de alguna manera de
+ * del uso de este software, incluso si se advierte de la posibilidad de dicho daño.
+
 ## TODO.
 
 Hasta ahora el código produce los datos asociados a la simulación de los circuitos perturbados, es necesario hacer los módulos que correlacionan el valor de elementos de circuito con distintas funciones de recompensa que el usuario debe poder ingresar (es necesario ambas las implementaciones de UI y backend). Luego de esto hay que hacer el loop que optimiza el circuito recorriendo con los valores de elemento en la dirección correlacionada con la recompensa máxima. 
