@@ -99,7 +99,6 @@ El software se basará en una arquitectura modular que permita la escalabilidad 
 - Regex : "regex. (2023). PyPI. Obtenido el 10 de Julio del 2023, [de 🔗](https://pypi.org/project/regex/)."
 - Numpy : "Harris, C. R., Millman, K. J., van der Walt, S. J., Gommers, R., Virtanen, P., Cournapeau, D., ... & Oliphant, T. E. (2020). Array programming with NumPy. Nature, 585(7825), 357-362." [Sitio oficial 🔗](https://numpy.org/) [Instalación 🔗](https://numpy.org/install/)
 - Seaborn : "Waskom, M., Botvinnik, O., O'Kane, D., Hobson, P., Ostblom, J., Lukauskas, S., ... & Augspurger, T. (2021). mwaskom/seaborn: v0.11.2 (January 2021). Zenodo. Obtenido [de 🔗](https://doi.org/10.5281/zenodo.3892921)." [Sitio oficial 🔗](https://seaborn.pydata.org/) [Instalación 🔗](https://seaborn.pydata.org/installing.html)
-1. Verificar más a fondo las funciones
 
 ## Licencia
 
@@ -117,7 +116,7 @@ TODO
 
 ## TODO.
 
-Hasta ahora el código produce los datos asociados a la simulación de los circuitos perturbados, es necesario hacer los módulos que correlacionan el valor de elementos de circuito con distintas funciones de recompensa que el usuario debe poder ingresar (es necesario ambas las implementaciones de UI y backend). Luego de esto hay que hacer el loop que optimiza el circuito recorriendo con los valores de elemento en la dirección correlacionada con la recompensa máxima. 
+Hasta ahora el código produce los datos asociados a la simulación de los circuitos perturbados, es necesario hacer los módulos que correlacionan el valor de elementos de circuito con distintas funciones de recompensa que el usuario debe poder ingresar (es necesario ambas las implementaciones de UI y backend). Luego de esto hay que hacer el loop que optimiza el circuito recorriendo con los valores de elemento en la dirección correlacionada con la recompensa máxima. Verificar más a fondo las funciones, corregir los requerimientos, simplificar el código.
 
 ## Requerimientos a instalar
 
@@ -130,15 +129,6 @@ Hasta ahora el código produce los datos asociados a la simulación de los circu
 - Regex : "regex. (2023). PyPI. Obtenido el 10 de Julio del 2023, [de 🔗](https://pypi.org/project/regex/)."
 - Numpy : "Harris, C. R., Millman, K. J., van der Walt, S. J., Gommers, R., Virtanen, P., Cournapeau, D., ... & Oliphant, T. E. (2020). Array programming with NumPy. Nature, 585(7825), 357-362." [Sitio oficial 🔗](https://numpy.org/) [Instalación 🔗](https://numpy.org/install/)
 - Seaborn : "Waskom, M., Botvinnik, O., O'Kane, D., Hobson, P., Ostblom, J., Lukauskas, S., ... & Augspurger, T. (2021). mwaskom/seaborn: v0.11.2 (January 2021). Zenodo. Obtenido [de 🔗](https://doi.org/10.5281/zenodo.3892921)." [Sitio oficial 🔗](https://seaborn.pydata.org/) [Instalación 🔗](https://seaborn.pydata.org/installing.html)
-1. Verificar más a fondo las funciones
-2. Integrar con un servicio en la nube.
-3. Identificar más requerimientos.
-=======
-1. Diagrama de estados
-2. Sintetizar los contenidos del curso como requerimientos de la documentación y el software.
->>>>>>> 92ab4d87ab2d841c3a3b2229df433304d598450b
-=======
->>>>>>> 4ef9149bf3bad9f951de5ea928b1a1616fa7c4e1
 
 ## Contacto
 
