@@ -46,9 +46,9 @@ EO         OUT 0  In+ In-  {GAIN}
 .ENDS
 
 .TEMP 27
-.TRAN 4U 64M UIC
+.TRAN 4U 16M UIC
 .OPTIONS ABSTOL=1U ITL2=20 TRTOL=7
-.PROBE V(1) V(2) V(3) V(4) V(5) V(6) V(7) V(8) V(9) V(10)
+.PROBE V(6)
 
 V6          4 0 6.9
 V5          0 11 6.9
@@ -57,7 +57,7 @@ V3          17 0 6.9
 V2          0 18 6.9
 V1          19 0 6.9
 Vin         10 0 DC 0 AC 1 0
-+ PULSE ( 0 1 0 0 0 3M 9M )
++ PULSE ( 0 1 0 0 0 2M 4M )
 R18         2 3 10K 
 R17         3 1 10K 
 XIOP1        0 3 1 IdOpamp

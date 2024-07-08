@@ -20,11 +20,19 @@ import numpy as np
 from scipy import interpolate, stats
 
 def plot_simulation_results(simulation_results, output=None, max_files=None):
-    """Grafica las simulaciones contenidas en el diccionario.
+    """
+    Grafica los resultados de las simulaciones contenidas en el diccionario.
 
     Args:
-        simulation_results (dict): Diccionario que contien
-         los resultados de la simulación.
+        simulation_results (dict): Diccionario que contiene los resultados de la simulación.
+        output (str, opcional): Nombre de la salida específica a graficar. Si es None, se grafica la primera salida disponible.
+        max_files (int, opcional): Número máximo de archivos a graficar. Si es None, se grafican todos.
+
+    Returns:
+        None
+
+    La función crea un gráfico para cada archivo de simulación, mostrando la evolución temporal
+    de la magnitud especificada (o la primera disponible si no se especifica).
     """
     files_counter = 0
     for file_name, plot in simulation_results.items():
@@ -52,6 +60,24 @@ def plot_simulation_results(simulation_results, output=None, max_files=None):
         plt.show()
 
 def estimate_distribution(simulation_results, num_timesteps, dist_type='normal', interpolation_method='linear'):
+    
+    """
+    Estima distribuciones probabilísticas basadas en los resultados de la simulación.
+
+    Args:
+        simulation_results (dict): Diccionario con los resultados de la simulación.
+        num_timesteps (int): Número de pasos de tiempo para la interpolación uniforme.
+        dist_type (str, opcional): Tipo de distribución a estimar ('normal' o 'uniform'). Por defecto es 'normal'.
+        interpolation_method (str, opcional): Método de interpolación ('linear', 'cubic', etc.). Por defecto es 'linear'.
+
+    Returns:
+        dict: Diccionario de distribuciones estimadas, donde las claves son los instantes de tiempo
+              y los valores son objetos de distribución de scipy.stats.
+
+    La función interpola los resultados no uniformes en el tiempo a datos uniformes,
+    y luego estima una distribución probabilística para cada instante de tiempo.
+    """    
+    
     # Inicializamos el diccionario vacío
     # lo vamos a llenar con distribuciones
     fitted_distributions = {}
@@ -106,6 +132,21 @@ def estimate_distribution(simulation_results, num_timesteps, dist_type='normal',
     return fitted_distributions
 
 def plot_distributions(fitted_distributions, num_samples=1000, n=20):
+
+    """
+    Grafica las distribuciones estimadas usando gráficos de violín.
+
+    Args:
+        fitted_distributions (dict): Diccionario de distribuciones estimadas.
+        num_samples (int, opcional): Número de muestras a generar para cada distribución. Por defecto es 1000.
+        n (int, opcional): Cada n-ésima etiqueta de tiempo se mostrará en el eje x. Por defecto es 20.
+
+    Returns:
+        None
+
+    La función crea un gráfico de violín que muestra la evolución de las distribuciones estimadas a lo largo del tiempo.
+    """
+
     data = []
     for time, distribution in fitted_distributions.items():
         # Muestreamos la distribución
@@ -137,6 +178,23 @@ def plot_distributions(fitted_distributions, num_samples=1000, n=20):
     plt.show()
 
 def plot_density(simulation_results, num_timesteps, num_bins=200, interpolation_method='linear'):
+
+    """
+    Grafica la densidad de los resultados de simulación interpolados a tiempos uniformes.
+
+    Args:
+        simulation_results (dict): Diccionario con los resultados de la simulación.
+        num_timesteps (int): Número de pasos de tiempo para la interpolación uniforme.
+        num_bins (int, opcional): Número de bins para el histograma 2D. Por defecto es 200.
+        interpolation_method (str, opcional): Método de interpolación ('linear', 'cubic', etc.). Por defecto es 'linear'.
+
+    Returns:
+        None
+
+    La función crea un gráfico de densidad 2D que muestra la distribución de los resultados
+    de la simulación a lo largo del tiempo, utilizando una escala de colores logarítmica.
+    """
+
     # Mínimos y máximos en tiempo
     min_time = min(min(result['time'])
                    for result in simulation_results.values())
@@ -170,7 +228,7 @@ def plot_density(simulation_results, num_timesteps, num_bins=200, interpolation_
     plt.hist2d(time_data, flattened_data, bins=num_bins,
                density=True, cmap='plasma', norm=LogNorm())
     plt.xlabel('Time')
-    plt.ylabel(f'Valor: {str(value_key)}')
+    plt.ylabel(f'Magnitud graficada: {str(value_key)} .')
 
     # Añadimos una barra con la leyenda
     plt.colorbar(label='Density')

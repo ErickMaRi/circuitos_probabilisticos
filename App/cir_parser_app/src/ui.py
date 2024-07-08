@@ -26,6 +26,21 @@ from tkinter import ttk
 import threading
 
 class ElementDialog(simpledialog.Dialog):
+
+    """
+    Cuadro de diálogo utilizado para actualizar los valores de la tabla.
+
+    Este diálogo se muestra cuando el usuario da doble click a una entrada de la tabla.
+    Permite modificar la distribución y la escala de perturbación para un elemento específico.
+
+    Attributes:
+        element (str): Nombre del elemento seleccionado.
+        dist (str): Tipo de distribución actual.
+        scale (float): Escala de la distribución actual.
+        ui (UI): Referencia a la instancia principal de la interfaz de usuario.
+        line (int): Número de línea del elemento en el archivo original.
+    """
+
     def __init__(self, master, ui, element, dist, scale, line):
         self.element = element
         self.dist = dist
@@ -35,6 +50,17 @@ class ElementDialog(simpledialog.Dialog):
         super().__init__(master)
 
     def body(self, master):
+
+        """
+        Crea y dispone los widgets del cuerpo del diálogo.
+
+        Args:
+            master (tk.Widget): Widget padre para los elementos del diálogo.
+
+        Returns:
+            tk.Widget: Widget que debe tener el foco inicial.
+        """
+
         ttk.Label(master, text="Element:").grid(row=0)
         ttk.Label(master, text=self.element).grid(row=0, column=1)
 
@@ -51,6 +77,14 @@ class ElementDialog(simpledialog.Dialog):
         return self.dist_entry
 
     def apply(self):
+
+        """
+        Aplica los cambios realizados en el diálogo.
+
+        Este método se llama cuando el usuario confirma los cambios.
+        Actualiza los valores de distribución y escala en la instancia de UI.
+        """
+
         self.dist = self.dist_entry.get()
         self.scale = float(self.scale_entry.get())
         self.ui.dist[self.line] = self.dist
@@ -58,6 +92,30 @@ class ElementDialog(simpledialog.Dialog):
 
 
 class UI:
+
+    """
+    Clase que contiene la interfaz gráfica principal de la aplicación.
+
+    Esta clase maneja la carga de archivos .cir, la generación de archivos perturbados,
+    la simulación de circuitos y la visualización de resultados.
+
+    Attributes:
+        current_file (str): Ruta del archivo .cir actualmente cargado.
+        num_files (int): Número de archivos a generar en la perturbación.
+        num_timesteps (int): Número de pasos de tiempo para la simulación.
+        num_bins (int): Número de bins para los gráficos de densidad.
+        running_simulation (bool): Indica si una simulación está en progreso.
+        generating_files (bool): Indica si se están generando archivos.
+        simulation_results (dict): Resultados de la simulación.
+        cir_dict (dict): Diccionario con la información del archivo .cir.
+        dist (dict): Diccionario con las distribuciones de perturbación por línea.
+        scale (dict): Diccionario con las escalas de perturbación por línea.
+        simulation_counter (int): Contador de simulaciones ejecutadas.
+        root (tk.Tk): Ventana principal de la aplicación.
+        selected_output (str): Salida seleccionada para visualización.
+        available_outputs (list): Lista de salidas disponibles para visualización.
+    """
+
     def __init__(self):
         self.current_file = ""
         self.num_files = 10
@@ -75,6 +133,15 @@ class UI:
         self.available_outputs = []  # Attribute to store available outputs
 
     def on_table_click(self, event):
+        """
+        Maneja el evento de doble click en un elemento de la tabla.
+
+        Abre un diálogo para editar las propiedades de perturbación del elemento seleccionado.
+
+        Args:
+            event (tk.Event): Evento de doble click.
+        """
+
         item = self.table.focus()
         element = self.table.item(item)['values'][0]
         dist = self.table.item(item)['values'][2]
@@ -90,12 +157,30 @@ class UI:
             element, self.cir_dict[line]['value'], self.dist[line], self.scale[line]))
 
     def get_line_from_name(self, name):
+
+        """
+        Obtiene el número de línea de un elemento a partir de su nombre.
+
+        Args:
+            name (str): Nombre del elemento.
+
+        Returns:
+            int or None: Número de línea del elemento si se encuentra, None si no se encuentra.
+        """
+
         for line, element in self.cir_dict.items():
             if element['name'] == name:
                 return line
         return None
 
     def load_file(self):
+
+        """
+        Carga un archivo .cir seleccionado por el usuario.
+
+        Actualiza el diccionario de circuito y la tabla de elementos.
+        """
+
         filename = filedialog.askopenfilename()
         if filename:
             self.current_file = filename
@@ -105,6 +190,13 @@ class UI:
             self.populate_table()
 
     def populate_table(self):
+
+        """
+        Llena la tabla con los elementos del circuito cargado.
+
+        Muestra el nombre, magnitud, distribución y escala de cada elemento.
+        """
+
         for row in self.table.get_children():
             self.table.delete(row)
         for key in self.cir_dict:
@@ -116,6 +208,13 @@ class UI:
                 element, magnitude, distribution, scale))
 
     def generate_files(self):
+
+        """
+        Genera archivos perturbados basados en el archivo .cir cargado.
+
+        Utiliza un hilo separado para no bloquear la interfaz de usuario.
+        """
+
         if not self.current_file:
             messagebox.showwarning("Advertencia", "Por favor, carga un archivo .cir primero.")
             return
@@ -141,24 +240,50 @@ class UI:
         thread.start()
 
     def update_simulation_counter(self, count):
-        self.simulation_counter_label.config(text=f"Simulaciones ejecutadas: {count}")
+
+        """
+        Actualiza el contador de simulaciones en la interfaz.
+
+        Args:
+            count (int): Número actual de simulaciones completadas.
+        """
+
+        self.root.after(0, lambda: self.simulation_counter_label.config(text=f"Simulaciones ejecutadas: {count}"))
 
     def run_simulations(self):
+
+        """
+        Ejecuta las simulaciones de los archivos generados.
+
+        Utiliza un hilo separado para no bloquear la interfaz de usuario.
+        Actualiza la lista de salidas disponibles al finalizar.
+        """
+
         if self.running_simulation:
             messagebox.showwarning("Advertencia", "La simulación ya está en progreso.")
             return
 
-        def run_simulation():
+        def run_simulation():            
             self.running_simulation = True
-            self.simulation_results, self.available_outputs = run_simulations("new_cir_files", prog=True)
+            self.simulation_results, self.available_outputs = run_simulations(
+                "new_cir_files", 
+                prog=True, 
+                update_callback=self.update_simulation_counter
+            )
             self.running_simulation = False
-            self.update_simulation_counter(len(self.simulation_results))
             self.output_selection['values'] = self.available_outputs
 
         thread = threading.Thread(target=run_simulation)
         thread.start()
 
     def plot_distributions(self):
+
+        """
+        Genera y muestra gráficos de distribución para la salida seleccionada.
+
+        Utiliza los resultados de la simulación para crear los gráficos.
+        """
+
         if not self.simulation_results:
             messagebox.showwarning("Advertencia", "No se han ejecutado las simulaciones.")
             return
@@ -175,6 +300,13 @@ class UI:
         plot_distributions(fitted_distributions)
 
     def plot_density(self):
+
+        """
+        Genera y muestra gráficos de densidad para la salida seleccionada.
+
+        Utiliza los resultados de la simulación para crear los gráficos.
+        """
+
         if not self.simulation_results:
             messagebox.showwarning("Advertencia", "No se han ejecutado las simulaciones.")
             return
@@ -190,6 +322,13 @@ class UI:
         plot_density(filtered_results, num_timesteps=self.num_timesteps, num_bins=self.num_bins)
 
     def create_ui(self):
+
+        """
+        Crea y configura la interfaz gráfica principal.
+
+        Inicializa todos los widgets y frames de la aplicación.
+        """
+
         self.root = tk.Tk()
         self.root.title("CIR Parser UI")
 
@@ -247,6 +386,14 @@ class UI:
         self.root.mainloop()
 
     def create_options_frame(self, frame):
+
+        """
+        Crea y configura el frame de opciones en la interfaz.
+
+        Args:
+            frame (ttk.Frame): Frame donde se colocarán las opciones.
+        """
+
         num_files_label = ttk.Label(frame, text="Cantidad de Archivos:")
         num_files_label.grid(row=0, column=0, padx=10, pady=5, sticky=tk.E)
         num_files_entry = ttk.Entry(frame, width=10)
@@ -269,15 +416,46 @@ class UI:
         num_bins_entry.bind("<FocusOut>", lambda e: self.update_num_bins(num_bins_entry.get()))
 
     def update_num_files(self, value):
+
+        """
+        Actualiza el número de archivos a generar.
+
+        Args:
+            value (str): Nuevo valor para num_files.
+        """
+
         self.num_files = int(value)
 
     def update_num_timesteps(self, value):
+
+        """
+        Actualiza el número de pasos de tiempo para la simulación.
+
+        Args:
+            value (str): Nuevo valor para num_timesteps.
+        """
+
         self.num_timesteps = int(value)
 
     def update_num_bins(self, value):
+
+        """
+        Actualiza el número de bins para los gráficos de densidad.
+
+        Args:
+            value (str): Nuevo valor para num_bins.
+        """
+
         self.num_bins = int(value)
 
     def run(self):
+
+        """
+        Inicia la ejecución de la interfaz gráfica.
+
+        Este método debe ser llamado para mostrar y ejecutar la aplicación.
+        """
+
         self.create_ui()
 
 

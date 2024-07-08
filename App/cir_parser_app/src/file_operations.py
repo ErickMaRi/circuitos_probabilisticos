@@ -15,20 +15,30 @@ import os
 import regex as re
 
 def read_cir_file(file_name):
-    """_Toma como entrada la dirección de un netlist formateado en .cir,
-    extrae los parámetros a un diccionario que contiene, la línea en la
-    que se encuentran, su nombre y valor_
+    """
+    Lee un archivo .cir que define un circuito y construye un netlist.
 
-    _En los archivos .cir que contienen los netlist, representando los
-    circuitos, se coloca el código que contiene los subcircuitos, para
-    diferenciar entre los parámetros que son contenidos en el circuito
-    en si y los pertenecientes al subcircuito, se usa la línea de texto
-    que contiene la temperatura para la cual simular, como un marcador
-    del comienzo del circuito. Se usa la variable temp_flag _
+    Esta función toma como entrada la dirección de un netlist formateado en .cir,
+    extrae los parámetros a un diccionario que contiene la línea en la que se encuentran,
+    su nombre y valor.
+
+    Args:
+        file_name (str): Ruta del archivo .cir a leer.
 
     Returns:
-        _dict_: _Diccionario que contiene: la línea de la que fue
-        extraído en los keys, en los valores un diccionario que contiene el nombre y el valor_
+        dict: Diccionario que contiene:
+              - Clave: Número de línea en el archivo original.
+              - Valor: Diccionario con 'name' (nombre del componente) y 'value' (valor del componente).
+
+    Notas:
+        - La función usa la línea que contiene '.TEMP' como marcador del comienzo del circuito principal.
+        - Solo se extraen componentes resistivos (R), capacitivos (C) o inductivos (L).
+        - Se manejan casos especiales como componentes con condiciones iniciales (IC).
+        - La función utiliza codificación UTF-8 para leer el archivo.
+
+    Raises:
+        FileNotFoundError: Si el archivo especificado no existe.
+        UnicodeDecodeError: Si hay problemas al decodificar el archivo con UTF-8.
     """
     # Abrimos el archivo inicial en formato de lectura, es sensible a
     # fallar si el valor de encoding no es el correcto para el archivo
@@ -78,14 +88,31 @@ def read_cir_file(file_name):
     return cir_dict
 
 def create_new_cir_file(cir_dict, input_file_name, output_file_name):
-    """Escribe un nuevo documento netlist, que contiene los valores dictados por un diccionario
+    """
+    Escribe un nuevo documento netlist con los valores dictados por un diccionario.
+
+    Esta función lee un archivo .cir existente y crea uno nuevo, reemplazando los valores
+    de los componentes especificados en el diccionario proporcionado.
 
     Args:
-        cir_dict (_dict_): _Diccionario que contiene en los keys la línea
-        en la que se encuentra el elemento, en sus valores un diccionario
-        que contiene el nombre y el valor del elemento_
-        input_file_name (_type_): _description_
-        output_file_name (_type_): _description_
+        cir_dict (dict): Diccionario que contiene:
+                         - Clave: Número de línea en el archivo original.
+                         - Valor: Diccionario con 'name' (nombre del componente) y 'value' (nuevo valor del componente).
+        input_file_name (str): Ruta del archivo .cir de entrada.
+        output_file_name (str): Ruta donde se guardará el nuevo archivo .cir.
+
+    Returns:
+        None
+
+    Notas:
+        - La función mantiene el formato original del archivo, solo cambiando los valores especificados.
+        - Se manejan casos especiales como componentes con condiciones iniciales (IC).
+        - La función utiliza codificación UTF-8 para leer el archivo de entrada.
+
+    Raises:
+        FileNotFoundError: Si el archivo de entrada no existe.
+        UnicodeDecodeError: Si hay problemas al decodificar el archivo de entrada con UTF-8.
+        IOError: Si hay problemas al escribir el archivo de salida.
     """
     # Abrimos el .cir
     with open(input_file_name, 'r', encoding="UTF-8") as in_file:
@@ -117,10 +144,27 @@ def create_new_cir_file(cir_dict, input_file_name, output_file_name):
                 out_file.write(line)
 
 def existe_carpeta(directory_name):
-    """Creamos una carpeta si esta no existe y eliminamos los archivos en ella.
+    """
+    Crea una carpeta si no existe y elimina todos los archivos en ella si ya existe.
+
+    Esta función verifica la existencia de una carpeta. Si no existe, la crea.
+    Si existe, elimina todos los archivos contenidos en ella.
 
     Args:
-        directory_name (str): Nombre del directorio.
+        directory_name (str): Nombre o ruta del directorio a verificar/crear.
+
+    Returns:
+        None
+
+    Notas:
+        - Esta función es útil para preparar un directorio limpio para nuevos archivos.
+        - Solo elimina archivos, no subcarpetas.
+
+    Raises:
+        OSError: Si hay problemas al crear el directorio o eliminar archivos.
+
+    Advertencia:
+        Esta función elimina archivos sin confirmación. Úsese con precaución.
     """
     if not os.path.exists(directory_name):
         os.makedirs(directory_name)

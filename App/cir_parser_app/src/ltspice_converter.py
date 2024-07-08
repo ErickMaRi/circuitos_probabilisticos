@@ -8,13 +8,28 @@ en el contexto de convertir de float al formato de string utilizado en LTSpice:
 import regex as re
 
 def LTSpice_to_float(string):
-    """Pasa de la notación usada para representar magnitudes en un netlist a un float.
+    """
+    Convierte una cadena en notación LTSpice a un número de punto flotante.
+
+    Esta función toma una cadena que representa una magnitud en el formato utilizado
+    en los netlists de LTSpice y la convierte a un número de punto flotante.
 
     Args:
-        string : En la forma 999, 10K, 20N etc.
+        string (str): Cadena en formato LTSpice. Puede ser de la forma '999', '10K', '20N', etc.
 
     Returns:
-        float: Valor en punto flotante extraido de la notación.
+        float: Valor en punto flotante extraído de la notación LTSpice.
+
+    Raises:
+        ValueError: Si la cadena no puede ser convertida a un número válido.
+
+    Ejemplos:
+        >>> LTSpice_to_float('10K')
+        10000.0
+        >>> LTSpice_to_float('20N')
+        2e-8
+        >>> LTSpice_to_float('1.5Meg')
+        1500000.0
     """
     try:
         return float(string)
@@ -22,8 +37,8 @@ def LTSpice_to_float(string):
         # Vamos a hacer letra minúscula cualquier entrada
         multiplier = None
         string = string.lower()
-
-        # Luego detectar la magnitud del valor
+      
+        # Luego detectar la magnitud del valor #Código horrible
         if "f" in string:
             multiplier = pow(10, -15)
         elif "p" in string:
@@ -59,16 +74,31 @@ def LTSpice_to_float(string):
         return string
 
 def float_to_LTSpice(flo):
-    """Converts float to LtSpice notation
-    Example:
-        27000 -> '27K'
-        0.0000001 -> '100N'
-        1234.567 -> '1.235K'
+    """
+    Convierte un número de punto flotante a notación LTSpice.
+
+    Esta función toma un número de punto flotante y lo convierte a una cadena
+    en el formato utilizado en los netlists de LTSpice.
+
     Args:
-        flo (float): float number to convert
+        flo (float): Número de punto flotante a convertir.
 
     Returns:
-        str: string representation of flo in LtSpice notation
+        str: Representación en cadena del número en notación LTSpice.
+
+    Ejemplos:
+        >>> float_to_LTSpice(27000)
+        '27K'
+        >>> float_to_LTSpice(0.0000001)
+        '100N'
+        >>> float_to_LTSpice(1234.567)
+        '1.235K'
+
+    Notas:
+        - La función utiliza una lista de unidades y sufijos para determinar
+          la representación más apropiada.
+        - Si el número es muy grande (>1e12), la función intenta usar el sufijo
+          más grande disponible ('T' para tera).
     """
     units = [
         {"limit": 1e-15, "suffix": "f"},
