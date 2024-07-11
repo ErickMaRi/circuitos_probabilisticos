@@ -71,7 +71,7 @@ class ElementDialog(simpledialog.Dialog):
 
         ttk.Label(master, text="Scale:").grid(row=2)
         self.scale_entry = ttk.Entry(master)
-        self.scale_entry.insert(tk.END, str(self.scale))
+        self.scale_entry.insert(tk.END, f"{self.scale:.2%}")
         self.scale_entry.grid(row=2, column=1)
 
         return self.dist_entry
@@ -86,9 +86,9 @@ class ElementDialog(simpledialog.Dialog):
         """
 
         self.dist = self.dist_entry.get()
-        self.scale = float(self.scale_entry.get())
-        self.ui.dist[self.line] = self.dist
-        self.ui.scale[self.line] = self.scale
+        self.scale = float(self.scale_entry.get().strip('%')) / 100
+        self.ui.cir_dict[self.line]['dist'] = self.dist
+        self.ui.cir_dict[self.line]['scale'] = self.scale
 
 
 class UI:
@@ -145,16 +145,17 @@ class UI:
         item = self.table.focus()
         element = self.table.item(item)['values'][0]
         dist = self.table.item(item)['values'][2]
-        scale = self.table.item(item)['values'][3]
+        scale = float(self.table.item(item)['values'][3].strip('%')) / 100
 
         line = self.get_line_from_name(element)
         dialog = ElementDialog(self.root, self, element, dist, scale, line)
-        self.dist[line] = dialog.dist
-        self.scale[line] = dialog.scale
+        self.cir_dict[line]['dist'] = dialog.dist
+        self.cir_dict[line]['scale'] = dialog.scale
 
         self.table.delete(item)
         self.table.insert('', 'end', values=(
-            element, self.cir_dict[line]['value'], self.dist[line], self.scale[line]))
+            element, self.cir_dict[line]['value'], self.cir_dict[line]['dist'], f"{self.cir_dict[line]['scale']:.2%}"))
+
 
     def get_line_from_name(self, name):
 
@@ -202,10 +203,10 @@ class UI:
         for key in self.cir_dict:
             element = self.cir_dict[key]['name']
             magnitude = self.cir_dict[key]['value']
-            distribution = self.dist[key]
-            scale = self.scale[key]
+            distribution = self.cir_dict[key]['dist']
+            scale = self.cir_dict[key]['scale']
             self.table.insert('', 'end', values=(
-                element, magnitude, distribution, scale))
+                element, magnitude, distribution, f"{scale:.2%}"))
 
     def generate_files(self):
 
