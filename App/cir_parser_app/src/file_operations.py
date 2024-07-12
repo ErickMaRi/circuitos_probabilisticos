@@ -1,15 +1,3 @@
-"""file_operations.py contiene:
-        read_cir_file(file_name): Lee un archivo .cir que define un circuito y
-        construye un netlist que representa los elementos resistivos, inductivos
-        o capacitivos, con la línea en la que se encuentran, su nombre y su magnitud.
-
-        create_new_cir_file(cir_dict, input_file_name, output_file_name): Escribe un
-        nuevo netlist con los valores definidos por un diccionario, es usado en
-        parameter_perturbator.
-
-        existe_carpeta(directory_name): Revisa si una carpeta existe, si no existe
-        la crea, si existe elimina todos los archivos que contenga.
-    """
 import ltspice_converter as spceconvrt
 import os
 import regex as re
@@ -65,10 +53,9 @@ def read_cir_file(file_name):
                 
                 if dist_info:
                     dist_type = dist_info.group(1).lower()
-                    dist_scale = float(dist_info.group(2))
-                    # print(f'El tipo: {str(dist_type)} y la escala {str(dist_scale)}.')
+                    dist_scale = float(dist_info.group(2)) if dist_info.group(2) else 0.00
                 else:
-                    dist_type = 'normal'
+                    dist_type = 'uniform'
                     dist_scale = 0.00
 
                 cir_dict[line_counter] = {
@@ -86,7 +73,7 @@ def read_cir_file(file_name):
 def create_new_cir_file(cir_dict, input_file_name, output_file_name):
     """
     Escribe un nuevo documento netlist con los valores dictados por un diccionario,
-    manteniendo los comentarios de distribución.
+    manteniendo los comentarios de distribución si están presentes.
 
     Args:
         cir_dict (dict): Diccionario que contiene:
@@ -107,19 +94,16 @@ def create_new_cir_file(cir_dict, input_file_name, output_file_name):
             for line in in_file:
                 line_counter += 1
                 if line_counter in cir_dict:
-                    # Dividimos la línea en partes
                     parts = line.split(';')
                     component_part = parts[0].strip()
                     comment_part = ';'.join(parts[1:]).strip() if len(parts) > 1 else ""
 
-                    # Procesamos la parte del componente
                     component_match = re.match(
                         r'([A-Za-z0-9]+)\s+([A-Za-z0-9]+)\s+([A-Za-z0-9]+)\s+(.*?)(?=(\s+[A-Za-z0-9]+\s+|$))', component_part)
                     if component_match:
                         component_parts = component_part.split()
                         new_value = spceconvrt.float_to_LTSpice(cir_dict[line_counter]['value'])
                         
-                        # Manejamos casos especiales como IC
                         if "IC=" in component_parts[-1]:
                             ic_part = component_parts[-1]
                             component_parts[-2] = new_value
@@ -129,7 +113,6 @@ def create_new_cir_file(cir_dict, input_file_name, output_file_name):
 
                         component_part = ' '.join(component_parts)
 
-                    # Reconstruimos la línea
                     if comment_part:
                         new_line = f"{component_part} ; {comment_part}\n"
                     else:
