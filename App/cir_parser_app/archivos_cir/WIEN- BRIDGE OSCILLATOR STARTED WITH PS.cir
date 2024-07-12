@@ -45,14 +45,14 @@ VPos        4 0 15
 XU1         2 3 4 5 1 OPA132_0
 DZ2         6 7  D_BZV80_1 
 DZ1         6 8  D_BZV80_1 
-R2          8 1 6K ; *DIST: UNIFORM 0.05 *
-R5          7 3 800 ; *DIST: UNIFORM 0.05 * 
-R4          0 7 200 ; *DIST: UNIFORM 0.05 * 
-R3          3 1 2.08K ; *DIST: UNIFORM 0.05 * 
-C1          9 1 10N IC=0 ; *DIST: UNIFORM 0.05 * 
-C1_2        4 2 10N IC=0 ; *DIST: UNIFORM 0.05 *
-R1          0 2 15K ; *DIST: UNIFORM 0.05 *
-R1_2        2 9 15K ; *DIST: UNIFORM 0.05 *
+R2          8 1 6K ; *DIST: UNIFORM 0 *
+R5          7 3 800 ; *DIST: UNIFORM 0 * 
+R4          0 7 200 ; *DIST: UNIFORM 0 * 
+R3          3 1 2.08K ; *DIST: UNIFORM 0 * 
+C1          9 1 10N IC=0 ; *DIST: NORMAL 0.05 * 
+C2        4 2 10N IC=0 ; *DIST: NORMAL 0.05 *
+R1          0 2 15K ; *DIST: UNIFORM 0 *
+R6        2 9 15K ; *DIST: UNIFORM 0 *
 
 .MODEL D_BZV80_1 D( IS=12.4F N=1 BV=6.2 IBV=7.5M RS=2.03 
 +      CJO=30P VJ=683M M=315M FC=500M TT=25.9N 

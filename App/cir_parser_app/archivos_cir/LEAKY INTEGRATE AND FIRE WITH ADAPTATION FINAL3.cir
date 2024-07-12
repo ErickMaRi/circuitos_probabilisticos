@@ -46,7 +46,7 @@ EO         OUT 0  In+ In-  {GAIN}
 .ENDS
 
 .TEMP 27
-.TRAN 4U 16M UIC
+.TRAN 4U 8M UIC
 .OPTIONS ABSTOL=1U ITL2=20 TRTOL=7
 .PROBE V(6)
 
@@ -58,36 +58,36 @@ V2          0 18 6.9
 V1          19 0 6.9
 Vin         10 0 DC 0 AC 1 0
 + PULSE ( 0 1 0 0 0 2M 4M )
-R18         2 3 10K 
-R17         3 1 10K 
+R18         2 3 10K ; *DIST: UNIFORM 0 *
+R17         3 1 10K ; *DIST: UNIFORM 0 *
 XIOP1        0 3 1 IdOpamp
-R16         4 5 1.51K 
-R15         5 2 1K 
-R14         6 5 1K 
+R16         4 5 1.51K ; *DIST: UNIFORM 0 *
+R15         5 2 1K ; *DIST: UNIFORM 0 *
+R14         6 5 1K ; *DIST: UNIFORM 0 *
 XLM301A      0 5 2 IdOpamp
-RES4        7 8 27K 
-R11         8 9 3K 
-C2          7 8 100N 
-R12         10 7 10K 
+RES4        7 8 27K ; *DIST: NORMAL 0.1 *
+R11         8 9 3K ; *DIST: UNIFORM 0 *
+C2          7 8 100N ; *DIST: NORMAL 0.1 *
+R12         10 7 10K ; *DIST: UNIFORM 0 *
 XLM301A_2    0 7 8 IdOpamp
-R10         11 9 3.7K 
-R9          9 12 1K 
+R10         11 9 3.7K ; *DIST: UNIFORM 0 *
+R9          9 12 1K ; *DIST: UNIFORM 0 *
 XLM301A_3    0 9 12 IdOpamp
 QT1         14 6 13  Q_2N2222_N_1 
-RES1        15 14 1K 
-RES2        15 13 10K 
-C1          15 13 100N 
+RES1        15 14 1K ; *DIST: UNIFORM 0 *
+RES2        15 13 10K ; *DIST: NORMAL 0.1 *
+C1          15 13 100N ; *DIST: NORMAL 0.1 *
 XOP2         0 15 17 16 13 StdOpamp
 + PARAMS: GAIN=160K RIN=2MEG ROUT=75 SLEWRATE=10MEG FPOLE1=5 FPOLE2=1MEG VOFFS=2M IBIAS=70N IOFFS=3N VDROPOH=1.9 VDROPOL=1.9
 XOP1         20 21 19 18 6 StdOpamp
 + PARAMS: GAIN=160K RIN=2MEG ROUT=75 SLEWRATE=10MEG FPOLE1=5 FPOLE2=1MEG VOFFS=2M IBIAS=70N IOFFS=3N VDROPOH=1.9 VDROPOL=1.9
-R7          13 22 10K 
-R8          22 23 10K 
+R7          13 22 10K ; *DIST: UNIFORM 0 *
+R8          22 23 10K ; *DIST: UNIFORM 0 *
 XLM301A_4    0 22 23 IdOpamp
-R6          10 15 1K 
-R3          12 21 820 
-RES3        20 6 2.7K 
-R1          23 20 1K 
+R6          10 15 1K ; *DIST: UNIFORM 0 *
+R3          12 21 820 ; *DIST: UNIFORM 0 *
+RES3        20 6 2.7K ; *DIST: UNIFORM 0 *
+R1          23 20 1K ; *DIST: UNIFORM 0 *
 
 .MODEL Q_2N2222_N_1 NPN( IS=11.9F NF=1 NR=1 RE=649M RC=1 
 +      RB=10 VAF=56.7 VAR=28.3 ISE=146F ISC=146F 

@@ -19,11 +19,13 @@ from file_operations import read_cir_file
 from parameter_perturbation import parameter_perturbator
 from simulation import run_simulations
 from plotting import estimate_distribution, plot_distributions, plot_density
+from ltspice_converter import LTSpice_to_float, float_to_LTSpice
 
 import tkinter as tk
 from tkinter import filedialog, messagebox, simpledialog
 from tkinter import ttk
 import threading
+import re
 
 class ElementDialog(simpledialog.Dialog):
 
@@ -186,8 +188,8 @@ class UI:
         if filename:
             self.current_file = filename
             self.cir_dict = read_cir_file(self.current_file)
-            self.dist = {key: 'uniform' for key in self.cir_dict.keys()}
-            self.scale = {key: 0.03 for key in self.cir_dict.keys()}
+            self.dist = {key: self.cir_dict[key]['dist'] for key in self.cir_dict.keys()}
+            self.scale = {key: self.cir_dict[key]['scale'] for key in self.cir_dict.keys()}
             self.populate_table()
 
     def populate_table(self):
@@ -351,6 +353,10 @@ class UI:
 
         load_button = ttk.Button(top_frame, text="Cargar Archivo", command=self.load_file)
         load_button.pack(side=tk.LEFT, padx=5)
+
+        info_button = ttk.Button(top_frame, text="Info Netlist", command=self.show_netlist_info)
+        info_button.pack(side=tk.LEFT, padx=5)
+
         generate_button = ttk.Button(top_frame, text="Generar Archivos", command=self.generate_files)
         generate_button.pack(side=tk.LEFT, padx=5)
         simulate_button = ttk.Button(top_frame, text="Simular", command=self.run_simulations)
@@ -415,6 +421,54 @@ class UI:
         num_bins_entry.insert(tk.END, "200")
         num_bins_entry.grid(row=2, column=1, padx=10, pady=5)
         num_bins_entry.bind("<FocusOut>", lambda e: self.update_num_bins(num_bins_entry.get()))
+
+
+    def show_netlist_info(self):
+        """
+        Muestra una ventana emergente con información detallada sobre el netlist cargado.
+        
+        Esta función analiza el contenido del archivo .cir cargado y extrae información
+        relevante como el nombre del netlist, subcircuitos, cantidad de elementos,
+        temperatura, timestep y tiempo de simulación.
+        """
+        if not self.current_file:
+            messagebox.showwarning("Advertencia", "Por favor, carga un archivo .cir primero.")
+            return
+
+        # Crear una nueva ventana emergente
+        info_window = tk.Toplevel(self.root)
+        info_window.title("Información del Netlist")
+        info_window.geometry("400x300")
+
+        # Crear un widget de texto para mostrar la información
+        info_text = tk.Text(info_window, wrap=tk.WORD, padx=10, pady=10)
+        info_text.pack(fill=tk.BOTH, expand=True)
+
+        # Analizar el archivo .cir
+        with open(self.current_file, 'r', encoding="UTF-8") as file:
+            content = file.read()
+
+        # Extraer información
+        netlist_name = self.current_file.split('/')[-1].split('\\')[-1]  # Obtener el nombre del archivo
+        subcircuits = len(re.findall(r'\.SUBCKT', content))
+        elements = len(re.findall(r'^[RCLVIX]', content, re.MULTILINE))
+        temp_match = re.search(r'\.TEMP\s+(\d+)', content)
+        temp = temp_match.group(1) if temp_match else "No especificada"
+        tran_match = re.search(r'\.TRAN\s+([\d.]+\w*)\s+([\d.]+\w*)', content)
+        timestep, sim_time = (tran_match.groups() if tran_match else ("No especificado", "No especificado"))
+
+        # Formatear y mostrar la información
+        info = f"""Nombre del Netlist: {netlist_name}
+Subcircuitos: {subcircuits}
+Cantidad de Elementos: {elements}
+Temperatura: {temp}
+Timestep: {timestep}
+Tiempo de Simulación: {sim_time}
+Timesteps mínimos recomendados: {str(round(LTSpice_to_float(sim_time)/LTSpice_to_float(timestep)))}
+"""
+        info_text.insert(tk.END, info)
+        info_text.config(state=tk.DISABLED)  # Hacer el texto de solo lectura
+
 
     def update_num_files(self, value):
 

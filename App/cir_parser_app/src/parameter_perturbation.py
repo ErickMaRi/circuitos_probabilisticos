@@ -24,16 +24,15 @@ def parameter_perturbator(cir_dict, input_file_name, dist=None, scale=None, n_fi
         parámetros, su valor default es "./archivos_cir/LINEAL.cir".
         base_output_folder (str, optional): Carpeta que contendrá los archivos generados, su default es "new_cir_files".
     """
-    if dist is None:
-        dist = {key: 'uniform' for key in cir_dict.keys()}
-    if scale is None:
-        scale = {key: 0.03 for key in cir_dict.keys()}
     if debug:
-        print(dist)
-        print(scale)
+        print(f'Cir_dict es: \n{cir_dict}\n\n')
+        print(f'dist es: \n{dist}\n\n')
+        print(f'scale es: \n{scale}\n\n')
+    
     # Revisamos si existe la carpeta
     fileopr.existe_carpeta(base_output_folder)
     out_dicts = []
+    
     # Realizamos n_files loops
     for i in range(n_files):
         # Iniciamos un diccionario vacío
@@ -41,39 +40,47 @@ def parameter_perturbator(cir_dict, input_file_name, dist=None, scale=None, n_fi
         for key, item in cir_dict.items():
             # Agarramos el valor actual
             value = item['value']
-            # Ese valor es perturbado probabilísticamente.
-            element_dist = dist[key]
-            element_scale = scale[key]
-            if element_dist == 'uniform':
-                min_val = value * (1 - element_scale)
-                max_val = value * (1 + element_scale)
-                new_val = np.random.uniform(min_val, max_val)
-            elif element_dist == 'normal':
-                std_dev = value * element_scale
-                new_val = np.random.normal(value, std_dev)
-            else:
-                raise ValueError('Unsupported distribution')
-
-            # Atajamos los valores negativos
-            while new_val < 0:
+            # Ese valor es perturbado probabilísticamente solo si la escala es mayor que 0
+            element_dist = item['dist']
+            element_scale = item['scale']
+            
+            if element_scale > 0:
                 if element_dist == 'uniform':
+                    min_val = value * (1 - element_scale)
+                    max_val = value * (1 + element_scale)
                     new_val = np.random.uniform(min_val, max_val)
                 elif element_dist == 'normal':
+                    std_dev = value * element_scale
                     new_val = np.random.normal(value, std_dev)
-            # Vamos armando el diccionario vacío
+                else:
+                    raise ValueError(f'Unsupported distribution: {element_dist}')
+
+                # Atajamos los valores negativos
+                while new_val < 0:
+                    if element_dist == 'uniform':
+                        new_val = np.random.uniform(min_val, max_val)
+                    elif element_dist == 'normal':
+                        new_val = np.random.normal(value, std_dev)
+            else:
+                new_val = value  # No change if scale is 0
+            
+            # Vamos armando el diccionario
             new_cir_dict[key] = {
                 'value': new_val,
                 'name': item['name'],
+                'dist': item['dist'],
+                'scale': item['scale']
             }
-            # Talvez vamos a ocupar esta lista de diccionarios
-            if retornar_lista_dicts:
-                out_dicts.append(new_cir_dict)
+        
+        # Tal vez vamos a ocupar esta lista de diccionarios
+        if retornar_lista_dicts:
+            out_dicts.append(new_cir_dict)
+        
         # Usamos el marco de referencia
-        output_file_name = os.path.join(
-            base_output_folder, f"{new_filename}_{i}.cir")
+        output_file_name = os.path.join(base_output_folder, f"{new_filename}_{i}.cir")
         # Con el nuevo dict creamos otro .cir
-        fileopr.create_new_cir_file(
-            new_cir_dict, input_file_name, output_file_name)
-        # Queremos la lista?
-        if retornar_lista_dicts & (i == n_files):
-            return out_dicts
+        fileopr.create_new_cir_file(new_cir_dict, input_file_name, output_file_name)
+    
+    # Queremos la lista?
+    if retornar_lista_dicts:
+        return out_dicts

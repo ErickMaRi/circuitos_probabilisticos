@@ -66,9 +66,10 @@ def read_cir_file(file_name):
                 if dist_info:
                     dist_type = dist_info.group(1).lower()
                     dist_scale = float(dist_info.group(2))
+                    # print(f'El tipo: {str(dist_type)} y la escala {str(dist_scale)}.')
                 else:
                     dist_type = 'normal'
-                    dist_scale = 0.03
+                    dist_scale = 0.00
 
                 cir_dict[line_counter] = {
                     'value': spceconvrt.LTSpice_to_float(value),
